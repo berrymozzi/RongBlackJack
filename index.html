@@ -8,6 +8,64 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #0f4a28; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; color: #f0ede8; }
 
+  /* VIP 워터마크 */
+  .vip-watermark {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .vip-watermark span {
+    position: absolute;
+    font-weight: 900; white-space: nowrap;
+    background: linear-gradient(135deg, #d4af37, #fff8dc, #d4af37);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    opacity: 0.07; letter-spacing: 0.05em; user-select: none;
+    animation: vipFloat linear infinite;
+  }
+  @keyframes vipFloat {
+    0%   { transform: translateY(0) rotate(-15deg); }
+    100% { transform: translateY(-60px) rotate(-15deg); }
+  }
+
+  /* VIP 헤더 배너 */
+  .vip-header-banner {
+    background: linear-gradient(90deg, transparent, rgba(212,175,55,0.15), rgba(212,175,55,0.25), rgba(212,175,55,0.15), transparent);
+    border-top: 1px solid rgba(212,175,55,0.4);
+    border-bottom: 1px solid rgba(212,175,55,0.4);
+    padding: 8px 0; overflow: hidden; position: relative;
+  }
+  .vip-ticker {
+    display: flex; gap: 0; white-space: nowrap;
+    animation: ticker 18s linear infinite;
+  }
+  @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+  .vip-ticker-item {
+    font-size: 13px; font-weight: 800; letter-spacing: 0.15em; padding: 0 40px;
+    background: linear-gradient(90deg, #d4af37, #fff8a0, #d4af37);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: none;
+  }
+  .vip-ticker-sep { color: rgba(212,175,55,0.4); padding: 0 10px; font-size: 13px; -webkit-text-fill-color: rgba(212,175,55,0.4); }
+
+  /* VIP 코너 뱃지 */
+  .vip-corner {
+    position: fixed; z-index: 10; pointer-events: none;
+    font-weight: 900; letter-spacing: 0.1em; font-size: 11px;
+    background: linear-gradient(135deg, #d4af37, #fff8a0, #b8860b);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    animation: vipGlow 2s ease-in-out infinite;
+  }
+  @keyframes vipGlow {
+    0%,100% { opacity: 0.7; } 50% { opacity: 1; }
+  }
+  @keyframes vipShine {
+    0%{background-position:0%} 100%{background-position:200%}
+  }
+  .vip-corner.tl { top: 60px; left: 12px; transform: rotate(-30deg); }
+  .vip-corner.tr { top: 60px; right: 12px; transform: rotate(30deg); }
+  .vip-corner.bl { bottom: 80px; left: 12px; transform: rotate(30deg); }
+  .vip-corner.br { bottom: 80px; right: 12px; transform: rotate(-30deg); }
+
   #setup { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
   .setup-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 2.5rem; max-width: 500px; width: 100%; }
   .setup-title { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 0.4rem; }
@@ -118,8 +176,22 @@
 </head>
 <body>
 
+<!-- VIP 워터마크 배경 -->
+<div class="vip-watermark" id="vipWatermark"></div>
+
+<!-- VIP 코너 뱃지 -->
+<div class="vip-corner tl">👑 VIP<br>김리플.</div>
+<div class="vip-corner tr">👑 VIP<br>김리플.</div>
+<div class="vip-corner bl">👑 VIP<br>김리플.</div>
+<div class="vip-corner br">👑 VIP<br>김리플.</div>
+
 <div id="setup">
   <div class="setup-card">
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <div style="font-size:11px;letter-spacing:0.2em;color:rgba(212,175,55,0.6);margin-bottom:6px;">EXCLUSIVE TABLE</div>
+      <div style="font-size:22px;font-weight:900;background:linear-gradient(135deg,#d4af37,#fff8a0,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.1em;">👑 VIP 김리플. 👑</div>
+      <div style="font-size:11px;letter-spacing:0.15em;color:rgba(212,175,55,0.5);margin-top:4px;">BLACKJACK PRIVATE TABLE</div>
+    </div>
     <div class="setup-title">🃏 블랙잭</div>
     <div class="setup-sub">멀티플레이어 — 최대 10명</div>
 
@@ -163,6 +235,19 @@
 </div>
 
 <div id="game">
+  <!-- VIP 티커 -->
+  <div class="vip-header-banner">
+    <div class="vip-ticker">
+      <span class="vip-ticker-item">👑 VIP 김리플.</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item">EXCLUSIVE BLACKJACK</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item">👑 VIP 김리플.</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item">PRIVATE TABLE</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item">👑 VIP 김리플.</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item">EXCLUSIVE BLACKJACK</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item">👑 VIP 김리플.</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item">PRIVATE TABLE</span><span class="vip-ticker-sep">✦</span>
+    </div>
+  </div>
   <div class="game-header">
     <div class="game-title">🃏 블랙잭</div>
     <div style="display:flex;gap:8px;align-items:center;">
@@ -179,6 +264,9 @@
   <div class="msg-bar" id="msgBar">준비 중...</div>
   <div class="players-zone">
     <div class="players-grid" id="playersGrid"></div>
+    <div style="margin-top:20px;padding:0 0;">
+      <div style="font-size:clamp(28px,6vw,52px);font-weight:900;letter-spacing:0.15em;background:linear-gradient(90deg,#d4af37,#fff8a0,#d4af37,#fff8a0,#d4af37);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:vipShine 3s linear infinite;text-shadow:none;">👑 VIP 김리플. 👑</div>
+    </div>
   </div>
   <div class="controls" id="controls"></div>
 </div>
@@ -561,6 +649,7 @@ function renderPlayers() {
           <div class="hand-cards" id="hc-${pi}-${hi}"></div>
           <div class="hand-score">${hand.cards.length>0?'합계: '+sc:''}</div>
           <div class="hand-bet-info">베팅: ${hand.bet}개</div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:0.12em;margin-top:5px;text-align:center;background:linear-gradient(90deg,#d4af37,#fff8a0,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">👑 VIP 김리플.</div>
           ${hand.resultMsg?`<div style="font-size:11px;margin-top:3px;color:rgba(255,255,255,0.8)">${hand.resultMsg}</div>`:''}
         </div>`;
       });
@@ -643,6 +732,23 @@ function renderControls() {
 }
 
 function setMsg(html) { document.getElementById('msgBar').innerHTML=html; }
+
+// VIP 워터마크 생성
+(function() {
+  const wm = document.getElementById('vipWatermark');
+  const texts = ['👑 VIP 김리플.', 'PRIVATE TABLE', 'VIP 김리플. ✦'];
+  const sizes = [14, 18, 22, 14, 18];
+  for (let i = 0; i < 20; i++) {
+    const span = document.createElement('span');
+    span.textContent = texts[i % texts.length];
+    span.style.left = (Math.random() * 110 - 5) + '%';
+    span.style.top = (Math.random() * 130 - 15) + '%';
+    span.style.fontSize = sizes[i % sizes.length] + 'px';
+    span.style.animationDuration = (8 + Math.random() * 8) + 's';
+    span.style.animationDelay = (-Math.random() * 10) + 's';
+    wm.appendChild(span);
+  }
+})();
 
 setCount(3);
 renderPlayerInputs();
