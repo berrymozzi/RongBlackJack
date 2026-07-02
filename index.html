@@ -348,9 +348,19 @@ function renderPlayerInputs() {
   for (let i = 0; i < playerCount; i++) {
     const row = document.createElement('div');
     row.className = 'player-input-row';
-    row.innerHTML = `<span class="player-num">${i+1}</span><input type="text" placeholder="플레이어 ${i+1}" value="${existing[i]||''}">`;
+    row.innerHTML = `
+      <span class="player-num">${i+1}</span>
+      <input type="text" id="pinput${i}" placeholder="플레이어 ${i+1}" value="${existing[i]||''}">
+      <button onclick="setVIP(${i},'김리플.')" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(212,175,55,0.4);background:rgba(212,175,55,0.1);color:#d4af37;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">👑 김리플.</button>
+      <button onclick="setVIP(${i},'스지찜')" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(212,175,55,0.4);background:rgba(212,175,55,0.1);color:#d4af37;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">👑 스지찜</button>
+    `;
     c.appendChild(row);
   }
+}
+
+function setVIP(idx, name) {
+  const inp = document.getElementById('pinput'+idx);
+  if (inp) inp.value = name;
 }
 
 function startGame() {
