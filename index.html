@@ -66,6 +66,11 @@
   .vip-corner.bl { bottom: 80px; left: 12px; transform: rotate(30deg); }
   .vip-corner.br { bottom: 80px; right: 12px; transform: rotate(-30deg); }
 
+  /* VIP 티어 색상 */
+  .vip-gold { background: linear-gradient(135deg,#ffd700,#fff4a0,#ffa500,#fff4a0,#ffd700); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:vipShine 1.5s linear infinite; }
+  .vip-rosegold { background: linear-gradient(135deg,#e8a0a0,#f9d4d4,#c97b7b,#f9d4d4,#e8a0a0); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:vipShine 2s linear infinite; }
+  .vip-white { background: linear-gradient(135deg,#d0d0d0,#fff,#d0d0d0); background-size:200%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:vipShine 3s linear infinite; }
+
   #setup { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
   .setup-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 2.5rem; max-width: 500px; width: 100%; }
   .setup-title { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 0.4rem; }
@@ -180,32 +185,42 @@
 <div class="vip-watermark" id="vipWatermark"></div>
 
 <!-- VIP 코너 뱃지 -->
-<div class="vip-corner tl">👑 VIP<br>김리플.</div>
-<div class="vip-corner tr">👑 VIP<br>스지찜</div>
-<div class="vip-corner bl">👑 VIP<br>왱앵</div>
-<div class="vip-corner br">👑 VIP<br>왱앵</div>
+<div class="vip-corner tl"><span class="vip-gold">👑 VIP<br>김리플.</span></div>
+<div class="vip-corner tr"><span class="vip-rosegold">💗 VIP<br>김미롱♥</span></div>
+<div class="vip-corner bl"><span class="vip-white">VIP<br>스지찜</span></div>
+<div class="vip-corner br"><span class="vip-white">VIP<br>왱앵</span></div>
 
 <div id="setup">
   <div class="setup-card">
     <div style="text-align:center;margin-bottom:1.5rem;">
-      <div style="font-size:11px;letter-spacing:0.2em;color:rgba(212,175,55,0.6);margin-bottom:8px;">✦ EXCLUSIVE PRIVATE TABLE ✦</div>
-      <div style="display:flex;gap:10px;align-items:center;justify-content:center;margin-bottom:6px;flex-wrap:wrap;">
+      <div style="font-size:11px;letter-spacing:0.2em;color:rgba(212,175,55,0.6);margin-bottom:10px;">✦ EXCLUSIVE PRIVATE TABLE ✦</div>
+
+      <!-- 1티어: 김리플. -->
+      <div style="text-align:center;margin-bottom:8px;">
+        <div style="font-size:9px;letter-spacing:0.2em;color:#ffd700;margin-bottom:3px;">✦ GOLD VIP ✦</div>
+        <div class="vip-gold" style="font-size:26px;font-weight:900;letter-spacing:0.1em;">👑 김리플.</div>
+      </div>
+
+      <!-- 2티어: 김미롱♥ -->
+      <div style="text-align:center;margin-bottom:8px;">
+        <div style="font-size:9px;letter-spacing:0.2em;color:#e8a0a0;margin-bottom:3px;">✦ ROSE VIP ✦</div>
+        <div class="vip-rosegold" style="font-size:22px;font-weight:900;letter-spacing:0.1em;">💗 김미롱♥</div>
+      </div>
+
+      <!-- 3티어: 스지찜 & 왱앵 -->
+      <div style="display:flex;gap:20px;justify-content:center;align-items:center;margin-bottom:6px;">
         <div style="text-align:center;">
-          <div style="font-size:10px;letter-spacing:0.15em;color:rgba(212,175,55,0.5);margin-bottom:3px;">VIP</div>
-          <div style="font-size:18px;font-weight:900;background:linear-gradient(135deg,#d4af37,#fff8a0,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.08em;">👑 김리플.</div>
+          <div style="font-size:9px;letter-spacing:0.15em;color:rgba(255,255,255,0.3);margin-bottom:2px;">VIP</div>
+          <div class="vip-white" style="font-size:17px;font-weight:900;letter-spacing:0.08em;">스지찜</div>
         </div>
-        <div style="color:rgba(212,175,55,0.3);font-size:16px;">✦</div>
+        <div style="color:rgba(255,255,255,0.15);font-size:14px;">│</div>
         <div style="text-align:center;">
-          <div style="font-size:10px;letter-spacing:0.15em;color:rgba(212,175,55,0.5);margin-bottom:3px;">VIP</div>
-          <div style="font-size:18px;font-weight:900;background:linear-gradient(135deg,#d4af37,#fff8a0,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.08em;">👑 스지찜</div>
-        </div>
-        <div style="color:rgba(212,175,55,0.3);font-size:16px;">✦</div>
-        <div style="text-align:center;">
-          <div style="font-size:10px;letter-spacing:0.15em;color:rgba(212,175,55,0.5);margin-bottom:3px;">VIP</div>
-          <div style="font-size:18px;font-weight:900;background:linear-gradient(135deg,#d4af37,#fff8a0,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0.08em;">👑 왱앵</div>
+          <div style="font-size:9px;letter-spacing:0.15em;color:rgba(255,255,255,0.3);margin-bottom:2px;">VIP</div>
+          <div class="vip-white" style="font-size:17px;font-weight:900;letter-spacing:0.08em;">왱앵</div>
         </div>
       </div>
-      <div style="font-size:11px;letter-spacing:0.15em;color:rgba(212,175,55,0.4);margin-bottom:0;">BLACKJACK PRIVATE TABLE</div>
+
+      <div style="font-size:11px;letter-spacing:0.15em;color:rgba(212,175,55,0.4);margin-top:4px;">BLACKJACK PRIVATE TABLE</div>
     </div>
     <div class="setup-title">🃏 블랙잭</div>
     <div class="setup-sub">멀티플레이어 — 최대 10명</div>
@@ -270,13 +285,15 @@
   <!-- VIP 티커 -->
   <div class="vip-header-banner">
     <div class="vip-ticker">
-      <span class="vip-ticker-item">👑 VIP 김리플.</span><span class="vip-ticker-sep">✦</span>
-      <span class="vip-ticker-item">👑 VIP 스지찜</span><span class="vip-ticker-sep">✦</span>
-      <span class="vip-ticker-item">👑 VIP 왱앵</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item" style="background:linear-gradient(90deg,#ffd700,#fff4a0,#ffd700);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:vipShine 1.5s linear infinite;">👑 VIP 김리플.</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item" style="background:linear-gradient(90deg,#e8a0a0,#f9d4d4,#e8a0a0);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">💗 VIP 김미롱♥</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item" style="-webkit-text-fill-color:rgba(220,220,220,0.9);">VIP 스지찜</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item" style="-webkit-text-fill-color:rgba(220,220,220,0.9);">VIP 왱앵</span><span class="vip-ticker-sep">✦</span>
       <span class="vip-ticker-item">EXCLUSIVE BLACKJACK</span><span class="vip-ticker-sep">✦</span>
-      <span class="vip-ticker-item">👑 VIP 김리플.</span><span class="vip-ticker-sep">✦</span>
-      <span class="vip-ticker-item">👑 VIP 스지찜</span><span class="vip-ticker-sep">✦</span>
-      <span class="vip-ticker-item">👑 VIP 왱앵</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item" style="background:linear-gradient(90deg,#ffd700,#fff4a0,#ffd700);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:vipShine 1.5s linear infinite;">👑 VIP 김리플.</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item" style="background:linear-gradient(90deg,#e8a0a0,#f9d4d4,#e8a0a0);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">💗 VIP 김미롱♥</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item" style="-webkit-text-fill-color:rgba(220,220,220,0.9);">VIP 스지찜</span><span class="vip-ticker-sep">✦</span>
+      <span class="vip-ticker-item" style="-webkit-text-fill-color:rgba(220,220,220,0.9);">VIP 왱앵</span><span class="vip-ticker-sep">✦</span>
       <span class="vip-ticker-item">PRIVATE TABLE</span><span class="vip-ticker-sep">✦</span>
     </div>
   </div>
@@ -298,11 +315,13 @@
     <div class="players-grid" id="playersGrid"></div>
     <div style="margin-top:20px;padding:0 0;">
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-        <div style="font-size:clamp(18px,4vw,36px);font-weight:900;letter-spacing:0.12em;background:linear-gradient(90deg,#d4af37,#fff8a0,#d4af37,#fff8a0,#d4af37);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:vipShine 3s linear infinite;white-space:nowrap;">👑 VIP 김리플.</div>
-        <div style="font-size:clamp(12px,2vw,22px);color:rgba(212,175,55,0.35);flex-shrink:0;">✦</div>
-        <div style="font-size:clamp(18px,4vw,36px);font-weight:900;letter-spacing:0.12em;background:linear-gradient(90deg,#d4af37,#fff8a0,#d4af37,#fff8a0,#d4af37);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:vipShine 3s linear infinite 1s;white-space:nowrap;">👑 VIP 스지찜</div>
-        <div style="font-size:clamp(12px,2vw,22px);color:rgba(212,175,55,0.35);flex-shrink:0;">✦</div>
-        <div style="font-size:clamp(18px,4vw,36px);font-weight:900;letter-spacing:0.12em;background:linear-gradient(90deg,#d4af37,#fff8a0,#d4af37,#fff8a0,#d4af37);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:vipShine 3s linear infinite 2s;white-space:nowrap;">👑 VIP 왱앵</div>
+        <div class="vip-gold" style="font-size:clamp(20px,4.5vw,40px);font-weight:900;letter-spacing:0.12em;white-space:nowrap;">👑 VIP 김리플.</div>
+        <div style="font-size:clamp(10px,2vw,18px);color:rgba(255,255,255,0.2);flex-shrink:0;">│</div>
+        <div class="vip-rosegold" style="font-size:clamp(18px,4vw,36px);font-weight:900;letter-spacing:0.12em;white-space:nowrap;">💗 VIP 김미롱♥</div>
+        <div style="font-size:clamp(10px,2vw,18px);color:rgba(255,255,255,0.2);flex-shrink:0;">│</div>
+        <div class="vip-white" style="font-size:clamp(14px,3vw,28px);font-weight:900;letter-spacing:0.1em;white-space:nowrap;">VIP 스지찜</div>
+        <div style="font-size:clamp(10px,2vw,18px);color:rgba(255,255,255,0.2);flex-shrink:0;">│</div>
+        <div class="vip-white" style="font-size:clamp(14px,3vw,28px);font-weight:900;letter-spacing:0.1em;white-space:nowrap;">VIP 왱앵</div>
       </div>
     </div>
   </div>
@@ -384,9 +403,10 @@ function renderPlayerInputs() {
     row.innerHTML = `
       <span class="player-num">${i+1}</span>
       <input type="text" id="pinput${i}" placeholder="플레이어 ${i+1}" value="${existing[i]||''}">
-      <button onclick="setVIP(${i},'김리플.')" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(212,175,55,0.4);background:rgba(212,175,55,0.1);color:#d4af37;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">👑 김리플.</button>
-      <button onclick="setVIP(${i},'스지찜')" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(212,175,55,0.4);background:rgba(212,175,55,0.1);color:#d4af37;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">👑 스지찜</button>
-      <button onclick="setVIP(${i},'왱앵')" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(212,175,55,0.4);background:rgba(212,175,55,0.1);color:#d4af37;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">👑 왱앵</button>
+      <button onclick="setVIP(${i},'김리플.')" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(255,215,0,0.5);background:rgba(255,215,0,0.12);color:#ffd700;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">👑 김리플.</button>
+      <button onclick="setVIP(${i},'김미롱♥')" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(232,160,160,0.5);background:rgba(232,160,160,0.12);color:#e8a0a0;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">💗 김미롱♥</button>
+      <button onclick="setVIP(${i},'스지찜')" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.07);color:#ccc;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">스지찜</button>
+      <button onclick="setVIP(${i},'왱앵')" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.07);color:#ccc;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">왱앵</button>
     `;
     c.appendChild(row);
   }
@@ -718,7 +738,7 @@ function renderPlayers() {
           <div class="hand-cards" id="hc-${pi}-${hi}"></div>
           <div class="hand-score">${hand.cards.length>0?'합계: '+sc:''}</div>
           <div class="hand-bet-info">베팅: ${hand.bet}개</div>
-          <div style="font-size:10px;font-weight:800;letter-spacing:0.1em;margin-top:5px;text-align:center;background:linear-gradient(90deg,#d4af37,#fff8a0,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">👑 김리플. ✦ 스지찜 ✦ 왱앵</div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:0.1em;margin-top:5px;text-align:center;background:linear-gradient(90deg,#d4af37,#fff8a0,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">👑 김리플. 💗 김미롱♥ 스지찜 왱앵</div>
           ${hand.resultMsg?`<div style="font-size:11px;margin-top:3px;color:rgba(255,255,255,0.8)">${hand.resultMsg}</div>`:''}
         </div>`;
       });
@@ -811,7 +831,7 @@ function setMsg(html) { document.getElementById('msgBar').innerHTML=html; }
 // VIP 워터마크 생성
 (function() {
   const wm = document.getElementById('vipWatermark');
-  const texts = ['👑 VIP 김리플.', '👑 VIP 스지찜', '👑 VIP 왱앵', 'PRIVATE TABLE', '김리플. ✦ 스지찜 ✦ 왱앵'];
+  const texts = ['👑 VIP 김리플.', '💗 VIP 김미롱♥', 'VIP 스지찜', 'VIP 왱앵', 'PRIVATE TABLE'];
   const sizes = [14, 18, 22, 14, 18];
   for (let i = 0; i < 20; i++) {
     const span = document.createElement('span');
