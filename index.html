@@ -216,6 +216,23 @@
           <span class="bm-amount">72개</span>
           <span class="bm-desc">72개당 칰룰 2번<br>블랙잭: 칰룰 3번</span>
         </button>
+        <button class="bet-mode-btn" id="modeFree" onclick="setBetMode('free')">
+          <span class="bm-amount" style="-webkit-text-fill-color:#aaa;color:#aaa;">직접 설정</span>
+          <span class="bm-desc">단가 직접 설정<br>칰룰 계산 가능</span>
+        </button>
+      </div>
+      <!-- 직접 설정 -->
+      <div id="freeSettings" style="display:none;margin-top:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;display:none;">
+        <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:10px;">단가 직접 설정</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <input type="number" id="freeUnit" value="100" min="1"
+            style="width:90px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:7px 10px;color:#f1c40f;font-size:16px;font-weight:700;outline:none;text-align:center;">
+          <span style="font-size:13px;color:rgba(255,255,255,0.45);">개당 칰룰</span>
+          <input type="number" id="freeChick" value="1" min="0.5" step="0.5"
+            style="width:70px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:7px 10px;color:#f1c40f;font-size:16px;font-weight:700;outline:none;text-align:center;">
+          <span style="font-size:13px;color:rgba(255,255,255,0.45);">번</span>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:8px;" id="freePreview"></div>
       </div>
     </div>
 
@@ -310,9 +327,13 @@ let currentPlayerIdx = 0;
 let currentHandIdx = 0;
 let bets = [];
 
+function getMode() {
+  return betModeKey === 'free' ? getFreeMode() : BET_MODES[betModeKey];
+}
+
 // 베팅 개수로 칰룰 계산
 function calcChick(betAmt, isBlackjack) {
-  const mode = BET_MODES[betModeKey];
+  const mode = getMode();
   const multiplier = betAmt / mode.unit;
   const base = isBlackjack ? mode.bjChickPer : mode.winChickPer;
   const result = multiplier * base;
@@ -321,7 +342,7 @@ function calcChick(betAmt, isBlackjack) {
 
 function betPreviewText(betAmt) {
   if (!betAmt || betAmt <= 0) return '';
-  const mode = BET_MODES[betModeKey];
+  const mode = getMode();
   const mult = betAmt / mode.unit;
   const winC = mult * mode.winChickPer;
   const bjC  = mult * mode.bjChickPer;
@@ -333,6 +354,15 @@ function setBetMode(k) {
   betModeKey = k;
   document.getElementById('mode50').classList.toggle('active', k===50);
   document.getElementById('mode72').classList.toggle('active', k===72);
+  document.getElementById('modeFree').classList.toggle('active', k==='free');
+  const fs = document.getElementById('freeSettings');
+  if (fs) fs.style.display = k==='free' ? 'block' : 'none';
+}
+
+function getFreeMode() {
+  const unit = parseInt(document.getElementById('freeUnit').value) || 100;
+  const chick = parseFloat(document.getElementById('freeChick').value) || 1;
+  return { unit, winChickPer: chick, bjChickPer: Math.round(chick * 1.5 * 10) / 10 };
 }
 
 function setCount(n) {
@@ -374,7 +404,12 @@ function startGame() {
   round = 1;
   document.getElementById('setup').style.display = 'none';
   document.getElementById('game').style.display = 'flex';
-  document.getElementById('modeBadge').textContent = `${BET_MODES[betModeKey].unit}개 단가`;
+  if (betModeKey === 'free') {
+    const fm = getFreeMode();
+    document.getElementById('modeBadge').textContent = `직접 설정 (${fm.unit}개 = 칰룰 ${fm.winChickPer}번)`;
+  } else {
+    document.getElementById('modeBadge').textContent = `${BET_MODES[betModeKey].unit}개 단가`;
+  }
   startRound();
 }
 
@@ -453,11 +488,13 @@ function updateBetPreview() {
 function confirmBet() {
   const input = document.getElementById('betInput');
   const val = parseInt(input.value);
-  const mode = BET_MODES[betModeKey];
   if (!val || val < 1) { setMsg('1개 이상 입력하세요'); return; }
-  if (val % mode.unit !== 0) {
-    setMsg(`${mode.unit}개 단위로 입력하세요`);
-    return;
+  if (betModeKey !== 'free') {
+    const mode = BET_MODES[betModeKey];
+    if (val % mode.unit !== 0) {
+      setMsg(`${mode.unit}개 단위로 입력하세요`);
+      return;
+    }
   }
   bets[currentPlayerIdx] = val;
   players[currentPlayerIdx].status = 'bet';
@@ -710,17 +747,23 @@ function renderControls() {
 
   if (phase==='bet') {
     const p=players[currentPlayerIdx];
-    const quickAmts = betModeKey === 50
-      ? [50, 100, 250, 500, 1000, 1500]
-      : [72, 144, 360, 720, 1440, 2160];
+    const isFree = betModeKey === 'free';
+    const mode = getMode();
+    const quickAmts = isFree
+      ? [50, 72, 100, 200, 500, 1000]
+      : betModeKey === 50
+        ? [50, 100, 250, 500, 1000, 1500]
+        : [72, 144, 360, 720, 1440, 2160];
+    const defaultVal = isFree ? 100 : mode.unit;
+    const modeDesc = isFree ? `직접 설정 (단가: ${mode.unit}개 = 칰룰 ${mode.winChickPer}번)` : `단가: ${mode.unit}개`;
     el.innerHTML=`
-      <div class="ctrl-header"><span>${p.name}</span>님 베팅 개수 입력 (단가: ${mode.unit}개)</div>
+      <div class="ctrl-header"><span>${p.name}</span>님 베팅 개수 입력 (${modeDesc})</div>
       <div class="bet-input-wrap">
-        <input type="number" id="betInput" min="${mode.unit}" step="${mode.unit}" value="${mode.unit}"
+        <input type="number" id="betInput" min="1" step="1" value="${defaultVal}"
           oninput="updateBetPreview()" onkeydown="if(event.key==='Enter')confirmBet()">
         <span class="bet-unit-label">개</span>
       </div>
-      <div class="bet-preview" id="betPreview">${betPreviewText(mode.unit)}</div>
+      <div class="bet-preview" id="betPreview">${betPreviewText(defaultVal)}</div>
       <div class="quick-bets">
         ${quickAmts.map(v=>`<button class="qbtn" onclick="setBetVal(${v})">${v}</button>`).join('')}
       </div>
