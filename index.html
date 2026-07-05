@@ -332,6 +332,17 @@
 const SUITS = ['♠','♥','♦','♣'];
 const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 
+// ==============================
+// 공개 테스트 모드 설정
+// ==============================
+const TEST_MODE = true;
+const TEST_PLAYER_NAMES = ['모찌', '십롬'];
+
+// VIP 표기용 키워드 (부분 일치) - 이름에 이 키워드가 포함되면 VIP 뱃지 표시
+const VIP_KEYWORDS = ['리플', '미롱', '왱앵', '지찜', '지멘'];
+const TEST_BLACKJACK_BETS = [360];
+
+
 // 단가 설정: 베팅개수 / 단가 = 배수 → 배수 × 기본칰룰
 const BET_MODES = {
   50: { unit: 50, winChickPer: 1,   bjChickPer: 1.5 },
@@ -465,6 +476,52 @@ function handScore(cards) {
   return total;
 }
 
+// 테스트 대상 플레이어인지 확인
+function isTestPlayer(name) {
+  if (!TEST_MODE) return false;
+  const normalizedName = String(name ?? '').trim();
+  return TEST_PLAYER_NAMES.includes(normalizedName);
+}
+
+// VIP 명단에 해당하는 이름인지 확인 (부분 일치)
+function isVIPPlayer(name) {
+  const normalizedName = String(name ?? '').trim();
+  if (!normalizedName) return false;
+  return VIP_KEYWORDS.some(keyword => normalizedName.includes(keyword));
+}
+
+// 덱에서 조건에 맞는 카드 한 장을 꺼냄
+function takeCardFromDeck(condition) {
+  const index = deck.findIndex(condition);
+  return index >= 0 ? deck.splice(index, 1)[0] : deck.pop();
+}
+
+// A + 10점 카드로 블랙잭 패 생성
+function makeTestBlackjackHand() {
+  const ace = takeCardFromDeck(card => card.r === 'A');
+  const tenValue = takeCardFromDeck(card => ['10', 'J', 'Q', 'K'].includes(card.r));
+  return Math.random() < 0.5 ? [ace, tenValue] : [tenValue, ace];
+}
+
+// 더블다운 시 정확히 21점이 되는 카드를 우선 선택
+function takeCardForExact21(cards) {
+  const exactIndex = deck.findIndex(card => handScore([...cards, card]) === 21);
+  if (exactIndex >= 0) return deck.splice(exactIndex, 1)[0];
+
+  // 한 장으로 21점이 불가능하면 버스트하지 않는 가장 높은 점수 선택
+  let bestIndex = -1;
+  let bestScore = -1;
+  deck.forEach((card, index) => {
+    const score = handScore([...cards, card]);
+    if (score <= 21 && score > bestScore) {
+      bestScore = score;
+      bestIndex = index;
+    }
+  });
+
+  return bestIndex >= 0 ? deck.splice(bestIndex, 1)[0] : deck.pop();
+}
+
 function isRed(s) { return s==='♥'||s==='♦'; }
 
 function cardEl(c, hidden, large) {
@@ -515,7 +572,14 @@ function confirmBet() {
   if (!val || val < 1) { setMsg('1개 이상 입력하세요'); return; }
   if (betModeKey !== 'free') {
     const mode = BET_MODES[betModeKey];
-    if (val % mode.unit !== 0) {
+    const currentPlayer = players[currentPlayerIdx];
+    const isSpecialTestBet =
+      TEST_MODE &&
+      currentPlayer &&
+      isTestPlayer(currentPlayer.name) &&
+      TEST_BLACKJACK_BETS.includes(val);
+
+    if (val % mode.unit !== 0 && !isSpecialTestBet) {
       setMsg(`${mode.unit}개 단위로 입력하세요`);
       return;
     }
@@ -537,9 +601,24 @@ function setBetVal(n) {
 }
 
 function dealCards() {
-  players.forEach((p,i) => {
-    p.hands = [{ cards: [deck.pop(), deck.pop()], bet: bets[i], status: 'waiting', resultMsg: '' }];
+  players.forEach((p, i) => {
+    const forceBlackjack =
+      TEST_MODE &&
+      isTestPlayer(p.name) &&
+      TEST_BLACKJACK_BETS.includes(bets[i]);
+
+    const firstCards = forceBlackjack
+      ? makeTestBlackjackHand()
+      : [deck.pop(), deck.pop()];
+
+    p.hands = [{
+      cards: firstCards,
+      bet: bets[i],
+      status: 'waiting',
+      resultMsg: ''
+    }];
   });
+
   dealerHand = [deck.pop(), deck.pop()];
   phase = 'play';
   currentPlayerIdx = -1;
@@ -611,12 +690,34 @@ function doubleDown() {
   const p = players[currentPlayerIdx];
   const hand = p.hands[currentHandIdx];
   hand.bet *= 2;
-  hand.cards.push(deck.pop());
+
+  const useTestBoost = TEST_MODE && isTestPlayer(p.name);
+  const newCard = useTestBoost
+    ? takeCardForExact21(hand.cards)
+    : deck.pop();
+
+  hand.cards.push(newCard);
   const sc = handScore(hand.cards);
   renderPlayers();
-  if (sc > 21) { hand.status='busted'; renderPlayers(); setMsg(`<span>${p.name}</span> 버스트!`); }
-  else { hand.status='stood'; renderPlayers(); setMsg(`<span>${p.name}</span> 더블다운 — ${sc}점`); }
-  currentHandIdx++; setTimeout(processCurrentHand, 700);
+
+  if (sc > 21) {
+    hand.status = 'busted';
+    renderPlayers();
+    setMsg(`<span>${p.name}</span> 버스트!`);
+  } else {
+    hand.status = 'stood';
+    renderPlayers();
+    if (useTestBoost && sc === 21) {
+      setMsg(`<span>${p.name}</span> TEST 더블다운 — 정확히 21점!`);
+    } else if (useTestBoost) {
+      setMsg(`<span>${p.name}</span> TEST 더블다운 — ${sc}점`);
+    } else {
+      setMsg(`<span>${p.name}</span> 더블다운 — ${sc}점`);
+    }
+  }
+
+  currentHandIdx++;
+  setTimeout(processCurrentHand, 700);
 }
 
 function splitHand() {
@@ -704,7 +805,7 @@ function renderPlayers() {
     const chickDisplay = Number.isInteger(p.totalChick) ? p.totalChick : p.totalChick.toFixed(1);
     let html = `
       <div class="player-title-row">
-        <span>${p.name}</span>
+        <span>${p.name}${isTestPlayer(p.name) ? ' <small style="color:#ffdf6e;font-size:9px;">개발자</small>' : ''}${!isTestPlayer(p.name) && isVIPPlayer(p.name) ? ' <small style="background:linear-gradient(135deg,#d4af37,#fff8a0,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;font-size:10px;letter-spacing:0.05em;">👑VIP</small>' : ''}</span>
         ${p.status==='betting'?'<span class="hand-status status-active">베팅중</span>':''}
       </div>
       <div class="player-stats">
